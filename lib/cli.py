@@ -25,12 +25,14 @@ def main():
             performance_menu()
         elif choice == "3":
             analysis_menu()
+        elif choice == "4":
+            exit_program()()
         else:
-            print("Invalid choice")
+            print("n\Invalid choice")
 
 
 def menu():
-    print("Please select an option:")
+    print("\n=== Athlete Performance Tracker ===")
     print("0. Exit the program")
     print("1. Some useful function")
 
