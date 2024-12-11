@@ -18,10 +18,13 @@ def main():
     while True:
         menu()
         choice = input("\nEnter your choices:")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            helper_1()
+
+        if choice == "1":
+            athlete_menu()
+        elif choice == "2":
+            performance_menu()
+        elif choice == "3":
+            analysis_menu()
         else:
             print("Invalid choice")
 
