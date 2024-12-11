@@ -36,7 +36,7 @@ def menu():
     print("1. Athlete Management")
     print("2. Performance Testing")
     print("3. Analysis")
-    print("4. Performance Testing")
+    print("4. Exit")
 
 
 
