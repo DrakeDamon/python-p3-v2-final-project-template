@@ -165,8 +165,28 @@ def find_top_performers():
             print(f"Best 40-yard Dash: {best_forty} seconds")
             print(f"Best Vertical Jump: {best_vertical} inches")
 
+def track_progress():
+    """Helper function to track an athlete's progress over time"""
+    name = input("\nEnter athlete's name:")
+    athlete =  Athlete.find_by_name(name)
+    if athlete:
+        performances = athlete.get_performances()
+        if len(performances) < 2:
+            print("\nNot enough performance data to track progress for {name}.")
+            return
+        
+        first = performances[-1]
+        last = performances[0]
 
-    
+        print(f"\nProgress for {name}:")
+        print(f"40-yard dash: {first.forty_yard} to {last.forty_yard} seconds")
+        print(f"Vertical jump: {first.vertical_jump} to {last.vertical_jump} inches")
+        print(f"5-10-5 agility: {first.agility_time} to {last.agility_time} seconds")
+       
+
+       
+        
+      
 
 
 def exit_program():
