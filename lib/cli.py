@@ -17,7 +17,7 @@ from helpers import (
 def main():
     while True:
         menu()
-        choice = input("> ")
+        choice = input("\nEnter your choices:")
         if choice == "0":
             exit_program()
         elif choice == "1":
