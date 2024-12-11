@@ -147,6 +147,28 @@ def view_all_performances():
         else:
             print(f"\nNo athletes found with name: {name}.")
 
+
+def find_top_performers():
+    """Helper function to find top performaers in each categtory"""
+
+    athletes = Athlete.get_all()
+    if not athletes:
+        print("\nNo athletes found.")
+        return
+    
+    for athlete in athletes:
+        if performances:
+            best_forty = min((p.forty_yard for p in performances), default=None)
+            best_vertical = max((p.vertical_jump for p in performances), default=None)
+
+            print(f"\nAthlete: {athlete.name}")
+            print(f"Best 40-yard Dash: {best_forty} seconds")
+            print(f"Best Vertical Jump: {best_vertical} inches")
+
+
+    
+
+
 def exit_program():
     print("\nGoodbye!")
     exit()
