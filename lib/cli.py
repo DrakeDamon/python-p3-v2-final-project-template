@@ -66,5 +66,23 @@ def athlete_menu():
             print("Invalid choice")
 
 
+def performance_menu():
+    while True:
+        print("\n=== Performance Testing ===")
+        print("1. Record New Performance")
+        print("2. View Athlete's Performance History")
+        print("3. Return to Main Menu")
+
+        choice = input("\nEnter your choices:")
+
+        if choice == "1":
+            record_performance()
+        elif choice == "2":
+            view_athlete_performance()
+        elif choice == "3":
+            break
+        else:
+            print("Invalid choice")
+
 if __name__ == "__main__":
     main()
