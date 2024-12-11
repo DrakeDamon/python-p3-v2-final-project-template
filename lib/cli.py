@@ -38,6 +38,32 @@ def menu():
     print("3. Analysis")
     print("4. Exit")
 
+def athlete_menu():
+    while True:
+        print("\n=== Athlete Management ===")
+        print("1. Add New Athlete")
+        print("2. View All Athletes")
+        print("3. Find Athlete")
+        print("4. Update Athlete")
+        print("5. Delete Athlete")
+        print("6. Return to Main Menu")
+
+        choice = input("\nEnter your choices:")
+
+        if choice == "1":
+            add_new_athlete()
+        elif choice == "2":
+            view_all_athletes()
+        elif choice == "3":
+            find_athlete()
+        elif choice == "4":
+            update_athlete()
+        elif choice == "5":
+            delete_athlete()
+        elif choice == "6":
+            break
+        else:
+            print("Invalid choice")
 
 
 if __name__ == "__main__":
