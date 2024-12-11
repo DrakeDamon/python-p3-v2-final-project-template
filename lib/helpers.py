@@ -1,14 +1,14 @@
 # lib/helpers.py
-from models.athlete import Athlete  # Fixed import (athlete not athletes)
+from models.athlete import Athlete
 from models.performance import Performance
 from datetime import datetime 
 
 def add_new_athlete():
     """Helper function to add a new athlete"""
-    print("\n=== Add New Athlete ===")  # Fixed \n notation
+    print("\n=== Add New Athlete ===")
     try:
-        name = input("Enter athlete name: ")  # Removed colon after type hint
-        height = float(input("Enter athlete height (in inches): "))  # Fixed float conversion
+        name = input("Enter athlete name: ")
+        height = float(input("Enter athlete height (in inches): "))
         weight = float(input("Enter athlete weight (in lbs): "))
         position = input("Enter athlete position: ")
 
@@ -19,21 +19,19 @@ def add_new_athlete():
         print(f"\nError: {e}")
         print("Please try again.")
 
-
 def view_all_athletes():
     """Helper function to display all athletes"""
-    print("\n=== All Athletes ===")  # Fixed \n notation
+    print("\n=== All Athletes ===")
     athletes = Athlete.get_all()
     if not athletes:
         print("No athletes found.")
         return
     
     for athlete in athletes:
-        print(f"\nName: {athlete.name}")  # Fixed \n notation and spacing
-        print(f"Height: {athlete.height} inches")  # Added units
+        print(f"\nName: {athlete.name}")
+        print(f"Height: {athlete.height} inches")
         print(f"Weight: {athlete.weight} lbs")
         print(f"Position: {athlete.position}")
-
 
 def find_athlete():
     """Helper function to find athlete by name"""
@@ -41,14 +39,12 @@ def find_athlete():
     athlete = Athlete.find_by_name(name)
     if athlete:
         print(f"\nFound athlete:")
-        print(f"Name: {athlete.name}")  # Fixed \n notation and spacing
+        print(f"Name: {athlete.name}")
         print(f"Height: {athlete.height} inches")
         print(f"Weight: {athlete.weight} lbs")
         print(f"Position: {athlete.position}")
     else:
         print(f"\nNo athlete found with name: {name}")
-
-
 
 def update_athlete():
     """Helper function to update athlete information"""
@@ -63,7 +59,6 @@ def update_athlete():
             new_weight = input(f"Weight in lbs ({athlete.weight}): ")
             new_position = input(f"Position ({athlete.position}): ")
             
-            # Only update if new value provided
             if new_name.strip(): athlete.name = new_name
             if new_height.strip(): athlete.height = float(new_height)
             if new_weight.strip(): athlete.weight = float(new_weight)
@@ -123,72 +118,68 @@ def record_performance():
     else:
         print(f"\nNo athlete found with name: {name}")
 
-
-def view_all_performances():
-    """Helper function to display all performance test results"""
-    name = input("\nEnter athlete name:")
+def view_athlete_performance():
+    """Helper function to view an athlete's test history"""
+    name = input("\nEnter athlete name: ")
     athlete = Athlete.find_by_name(name)
     if athlete:
         performances = athlete.get_performances()
         if not performances:
-            print(f"\nNo performances found for {name}.")
+            print(f"\nNo performances found for {name}")
             return
         
         for perf in performances:
-            print(f"\nTest Date: {perf.test_date.strftime('%Y-%m-%d')}")  # Fixed date formatting
-            print(f"Forty-yard Dash Time: {perf.forty_yard:.2f} seconds")
-            print(f"Vertical Jump Height: {perf.vertical_jump:.2f} inches")
-            print(f"5-10-5 Agility Time: {perf.agility_time:.2f} seconds")
-            print(f"Flexibility Score: {perf.flexibility_score}")
-            print(f"Strength Score: {perf.strength_score}")
+            print(f"\nTest Date: {perf.test_date.strftime('%Y-%m-%d')}")
+            print(f"40-yard dash: {perf.forty_yard:.2f} seconds")
+            print(f"Vertical jump: {perf.vertical_jump:.2f} inches")
+            print(f"Agility time: {perf.agility_time:.2f} seconds")
+            print(f"Flexibility: {perf.flexibility_score}")
+            print(f"Strength: {perf.strength_score}")
             if perf.notes:
                 print(f"Notes: {perf.notes}")
-
-        else:
-            print(f"\nNo athletes found with name: {name}.")
-
+    else:
+        print(f"\nNo athlete found with name: {name}")
 
 def find_top_performers():
-    """Helper function to find top performaers in each categtory"""
-
+    """Helper function to find top performers in each category"""
     athletes = Athlete.get_all()
     if not athletes:
         print("\nNo athletes found.")
         return
     
     for athlete in athletes:
+        performances = athlete.get_performances()
         if performances:
             best_forty = min((p.forty_yard for p in performances), default=None)
             best_vertical = max((p.vertical_jump for p in performances), default=None)
-
+            
             print(f"\nAthlete: {athlete.name}")
-            print(f"Best 40-yard Dash: {best_forty} seconds")
-            print(f"Best Vertical Jump: {best_vertical} inches")
+            if best_forty:
+                print(f"Best 40-yard dash: {best_forty:.2f} seconds")
+            if best_vertical:
+                print(f"Best vertical jump: {best_vertical:.2f} inches")
 
 def track_progress():
     """Helper function to track an athlete's progress over time"""
-    name = input("\nEnter athlete's name:")
-    athlete =  Athlete.find_by_name(name)
+    name = input("\nEnter athlete name: ")
+    athlete = Athlete.find_by_name(name)
     if athlete:
         performances = athlete.get_performances()
         if len(performances) < 2:
-            print("\nNot enough performance data to track progress for {name}.")
+            print(f"\nNeed at least 2 performances to track progress for {name}")
             return
         
-        first = performances[-1]
-        last = performances[0]
-
-        print(f"\nProgress for {name}:")
-        print(f"40-yard dash: {first.forty_yard} to {last.forty_yard} seconds")
-        print(f"Vertical jump: {first.vertical_jump} to {last.vertical_jump} inches")
-        print(f"5-10-5 agility: {first.agility_time} to {last.agility_time} seconds")
-       
-
-       
+        first = performances[-1]  # Oldest performance
+        last = performances[0]    # Most recent performance
         
-      
-
+        print(f"\nProgress for {name}:")
+        print(f"40-yard dash: {first.forty_yard:.2f} → {last.forty_yard:.2f} seconds")
+        print(f"Vertical jump: {first.vertical_jump:.2f} → {last.vertical_jump:.2f} inches")
+        print(f"Agility time: {first.agility_time:.2f} → {last.agility_time:.2f} seconds")
+        print(f"Flexibility: {first.flexibility_score:.2f} → {last.flexibility_score:.2f}")
+        print(f"Strength: {first.strength_score:.2f} → {last.strength_score:.2f}")
 
 def exit_program():
+    """Helper function to exit the program"""
     print("\nGoodbye!")
     exit()
