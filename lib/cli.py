@@ -84,5 +84,25 @@ def performance_menu():
         else:
             print("Invalid choice")
 
+
+def analysis_menu():
+    while True:
+        print("\n=== Analysis ===")
+        print("1. Find Top Performers")
+        print("2. Track Progress")
+        print("3. Return to Main Menu")
+
+        choice = input("\nEnter your choices:")
+
+        if choice == "1":
+            find_top_performers()
+        elif choice == "2":
+            track_progress()
+        elif choice == "3":
+            break
+        else:
+            print("Invalid choice")
+
+            
 if __name__ == "__main__":
     main()
