@@ -35,7 +35,7 @@ def menu():
     print("\n=== Athlete Performance Tracker ===")
     print("1. Athlete Management")
     print("2. Performance Testing")
-    print("3. Performance Testing")
+    print("3. Analysis")
     print("4. Performance Testing")
 
 
