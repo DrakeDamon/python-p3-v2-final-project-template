@@ -1,8 +1,16 @@
 # lib/cli.py
 
 from helpers import (
-    exit_program,
-    helper_1
+    add_new_athlete,
+    view_all_athletes,
+    find_athlete,
+    update_athlete,
+    delete_athlete,
+    record_performance,
+    view_athlete_performance,
+    find_top_performers,
+    track_progress,
+    exit_program
 )
 
 
