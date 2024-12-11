@@ -88,35 +88,41 @@ def delete_athlete():
 
 def record_performance():
     """Helper function to record new performance test results"""
-    name = input("\nEnter athlete name: ")
-    athlete = Athlete.find_by_name(name)
-    if athlete:
-        try:
-            print("\nEnter test results:")
-            forty_yard = float(input("40-yard dash time (seconds): "))
-            vertical = float(input("Vertical jump height (inches): "))
-            agility = float(input("5-10-5 agility time (seconds): "))
-            flexibility = float(input("Flexibility score: "))
-            strength = float(input("Strength score: "))
-            notes = input("Notes (optional): ")
+    while True:  # Add this loop
+        name = input("\nEnter athlete name: ")
+        athlete = Athlete.find_by_name(name)
+        if athlete:
+            try:
+                print("\nEnter test results:")
+                forty_yard = float(input("40-yard dash time (seconds): "))
+                vertical = float(input("Vertical jump height (inches): "))
+                agility = float(input("5-10-5 agility time (seconds): "))
+                flexibility = float(input("Flexibility score: "))
+                strength = float(input("Strength score: "))
+                notes = input("Notes (optional): ")
+                
+                performance = Performance(
+                    athlete_id=athlete.id,
+                    test_date=datetime.now(),
+                    forty_yard=forty_yard,
+                    vertical_jump=vertical,
+                    agility_time=agility,
+                    flexibility_score=flexibility,
+                    strength_score=strength,
+                    notes=notes
+                )
+                performance.save()
+                print("\nPerformance recorded successfully!")
+                break  # Now this break has a loop to break from
+            except ValueError as e:
+                print(f"\nError: {e}")
+                print("Please try again.")
+        else:
+            print(f"\nNo athlete found with name: {name}")
+            retry = input("Would you like to try another name? (y/n): ")
+            if retry.lower() != 'y':
+                break  
             
-            performance = Performance(
-                athlete_id=athlete.id,
-                test_date=datetime.now(),
-                forty_yard=forty_yard,
-                vertical_jump=vertical,
-                agility_time=agility,
-                flexibility_score=flexibility,
-                strength_score=strength,
-                notes=notes
-            )
-            performance.save()
-            print("\nPerformance recorded successfully!")
-        except ValueError as e:
-            print(f"\nError: {e}")
-            print("Please try again.")
-    else:
-        print(f"\nNo athlete found with name: {name}")
 
 def view_athlete_performance():
     """Helper function to view an athlete's test history"""

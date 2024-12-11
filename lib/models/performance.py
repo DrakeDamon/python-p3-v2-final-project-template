@@ -4,22 +4,22 @@ from datetime import datetime
 class Performance:
     @classmethod 
     def create_table(cls):
-        sql = '''
-            CREATE TABLE IF NOT EXISTS performances (  # Changed to plural
-                id INTEGER PRIMARY KEY,
-                athlete_id INTEGER,
-                test_date DATE,
-                forty_yard FLOAT,
-                vertical_jump FLOAT,
-                agility_time FLOAT,
-                flexibility_score FLOAT,
-                strength_score FLOAT,
-                notes TEXT,
-                FOREIGN KEY (athlete_id) REFERENCES athletes(id)
-            )
-            '''
-        CURSOR.execute(sql)
-        CONN.commit()
+      sql = '''
+          CREATE TABLE IF NOT EXISTS performances (
+              id INTEGER PRIMARY KEY,
+              athlete_id INTEGER,
+              test_date DATE,
+              forty_yard FLOAT,
+              vertical_jump FLOAT,
+              agility_time FLOAT,
+              flexibility_score FLOAT,
+              strength_score FLOAT,
+              notes TEXT,
+              FOREIGN KEY (athlete_id) REFERENCES athletes(id)
+          )
+          '''
+      CURSOR.execute(sql)
+      CONN.commit()
 
     def __init__(self, athlete_id, test_date, forty_yard, vertical_jump, 
                  agility_time, flexibility_score, strength_score, notes=None, id=None):  # Made notes optional
@@ -47,11 +47,11 @@ class Performance:
 
     def save(self):
         sql = '''
-            INSERT INTO performances (    # Fixed INSET typo
+            INSERT INTO performances (
                 athlete_id, test_date, forty_yard, vertical_jump,
                 agility_time, flexibility_score, strength_score, notes
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            '''    # Removed extra parenthesis
+            '''
         
         CURSOR.execute(sql, (
             self.athlete_id, self.test_date, self.forty_yard, 

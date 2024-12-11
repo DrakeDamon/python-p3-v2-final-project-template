@@ -1,4 +1,8 @@
 # lib/cli.py
+from models.athlete import Athlete
+from models.performance import Performance
+
+
 
 from helpers import (
     add_new_athlete,
@@ -28,7 +32,7 @@ def main():
         elif choice == "4":
             exit_program()()
         else:
-            print("n\Invalid choice")
+            print("\nInvalid choice")
 
 
 def menu():
@@ -103,6 +107,8 @@ def analysis_menu():
         else:
             print("Invalid choice")
 
-            
+
 if __name__ == "__main__":
+    Athlete.create_table()
+    Performance.create_table()
     main()
