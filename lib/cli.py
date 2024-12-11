@@ -33,8 +33,8 @@ def main():
 
 def menu():
     print("\n=== Athlete Performance Tracker ===")
-    print("1. Performance Testing")
-    print("1. Some useful function")
+    print("1. Athlete Management")
+    print("2. Performance Testing")
 
 
 if __name__ == "__main__":
