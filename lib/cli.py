@@ -33,7 +33,7 @@ def main():
 
 def menu():
     print("\n=== Athlete Performance Tracker ===")
-    print("0. Exit the program")
+    print("1. Performance Testing")
     print("1. Some useful function")
 
 
