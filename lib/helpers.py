@@ -123,6 +123,30 @@ def record_performance():
     else:
         print(f"\nNo athlete found with name: {name}")
 
+
+def view_all_performances():
+    """Helper function to display all performance test results"""
+    name = input("\nEnter athlete name:")
+    athlete = Athlete.find_by_name(name)
+    if athlete:
+        performances = athlete.get_performances()
+        if not performances:
+            print(f"\nNo performances found for {name}.")
+            return
+        
+        for perf in performances:
+            print(f"\nTest Date: {perf.test_date.strftime('%Y-%m-%d')}")  # Fixed date formatting
+            print(f"Forty-yard Dash Time: {perf.forty_yard:.2f} seconds")
+            print(f"Vertical Jump Height: {perf.vertical_jump:.2f} inches")
+            print(f"5-10-5 Agility Time: {perf.agility_time:.2f} seconds")
+            print(f"Flexibility Score: {perf.flexibility_score}")
+            print(f"Strength Score: {perf.strength_score}")
+            if perf.notes:
+                print(f"Notes: {perf.notes}")
+
+        else:
+            print(f"\nNo athletes found with name: {name}.")
+
 def exit_program():
     print("\nGoodbye!")
     exit()
