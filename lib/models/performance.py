@@ -70,7 +70,20 @@ class Performance:
     def get_by_athlete_id(cls, athlete_id):
         sql = "SELECT * FROM performances WHERE athlete_id = ? ORDER BY test_date DESC"
         CURSOR.execute(sql, (athlete_id,))
-        return [cls(*row) for row in CURSOR.fetchall()]
+        rows = CURSOR.fetchall()
+        if rows:
+            return [cls(
+                athlete_id=row[1],
+                test_date=row[2],
+                forty_yard=row[3],
+                vertical_jump=row[4],
+                agility_time=row[5],
+                flexibility_score=row[6],
+                strength_score=row[7],
+                notes=row[8],
+                id=row[0]
+            ) for row in rows]
+        return []
     
     def get_athlete(self):
         from models.athlete import Athlete

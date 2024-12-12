@@ -103,7 +103,7 @@ def record_performance():
                 
                 performance = Performance(
                     athlete_id=athlete.id,
-                    test_date=datetime.now(),
+                     test_date=datetime.now().strftime('%Y-%m-%d'),
                     forty_yard=forty_yard,
                     vertical_jump=vertical,
                     agility_time=agility,
@@ -135,7 +135,7 @@ def view_athlete_performance():
             return
         
         for perf in performances:
-            print(f"\nTest Date: {perf.test_date.strftime('%Y-%m-%d')}")
+            print(f"\nTest Date: {perf.test_date}")
             print(f"40-yard dash: {perf.forty_yard:.2f} seconds")
             print(f"Vertical jump: {perf.vertical_jump:.2f} inches")
             print(f"Agility time: {perf.agility_time:.2f} seconds")
@@ -153,17 +153,25 @@ def find_top_performers():
         print("\nNo athletes found.")
         return
     
+    found_performances = False
     for athlete in athletes:
-        performances = athlete.get_performances()
-        if performances:
-            best_forty = min((p.forty_yard for p in performances), default=None)
-            best_vertical = max((p.vertical_jump for p in performances), default=None)
-            
-            print(f"\nAthlete: {athlete.name}")
-            if best_forty:
-                print(f"Best 40-yard dash: {best_forty:.2f} seconds")
-            if best_vertical:
-                print(f"Best vertical jump: {best_vertical:.2f} inches")
+        try:
+            performances = athlete.get_performances()
+            if performances:
+                found_performances = True
+                best_forty = min((p.forty_yard for p in performances), default=None)
+                best_vertical = max((p.vertical_jump for p in performances), default=None)
+                
+                print(f"\nAthlete: {athlete.name}")
+                if best_forty:
+                    print(f"Best 40-yard dash: {best_forty:.2f} seconds")
+                if best_vertical:
+                    print(f"Best vertical jump: {best_vertical:.2f} inches")
+        except Exception as e:
+            print(f"\nError processing data for {athlete.name}: {e}")
+    
+    if not found_performances:
+        print("\nNo performance records found for any athlete.")
 
 def track_progress():
     """Helper function to track an athlete's progress over time"""

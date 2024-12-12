@@ -58,7 +58,7 @@ class Athlete:
         CURSOR.execute(sql, (name,))
         row = CURSOR.fetchone()
         if row:
-            return cls(*row)
+            return cls(row[1],row[2],row[3],row[4],row[0])
         return None
     
     def delete(self):
@@ -68,10 +68,16 @@ class Athlete:
 
     @classmethod
     def get_all(cls):
-        sql = 'SELECT * FROM athletes'  # Fixed FFROM typo
+        sql = 'SELECT * FROM athletes'
         CURSOR.execute(sql)
         rows = CURSOR.fetchall()
-        return [cls(*row) for row in rows]
+        return [cls(
+            name=row[1],
+            height=row[2],
+            weight=row[3],
+            position=row[4],
+            id=row[0]
+        ) for row in rows]
     
     def get_performances(self):  # Changed name to match Performance class
         from models.performance import Performance  # Capitalized Performance
