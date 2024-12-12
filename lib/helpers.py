@@ -183,15 +183,16 @@ def track_progress():
             print(f"\nNeed at least 2 performances to track progress for {name}")
             return
         
-        first = performances[-1]  # Oldest performance
-        last = performances[0]    # Most recent performance
+        last = performances[0]    # Most recent performance (keep this)
+        first = performances[-1]  # Oldest performance (keep this)
         
         print(f"\nProgress for {name}:")
-        print(f"40-yard dash: {first.forty_yard:.2f} → {last.forty_yard:.2f} seconds")
-        print(f"Vertical jump: {first.vertical_jump:.2f} → {last.vertical_jump:.2f} inches")
-        print(f"Agility time: {first.agility_time:.2f} → {last.agility_time:.2f} seconds")
-        print(f"Flexibility: {first.flexibility_score:.2f} → {last.flexibility_score:.2f}")
-        print(f"Strength: {first.strength_score:.2f} → {last.strength_score:.2f}")
+        # Swap first and last in the print statements
+        print(f"40-yard dash: {last.forty_yard:.2f} → {first.forty_yard:.2f} seconds")
+        print(f"Vertical jump: {last.vertical_jump:.2f} → {first.vertical_jump:.2f} inches")
+        print(f"Agility time: {last.agility_time:.2f} → {last.agility_time:.2f} seconds")
+        print(f"Flexibility: {last.flexibility_score:.2f} → {first.flexibility_score:.2f}")
+        print(f"Strength: {last.strength_score:.2f} → {first.strength_score:.2f}")
 
 def exit_program():
     """Helper function to exit the program"""
