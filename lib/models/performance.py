@@ -61,6 +61,21 @@ class Performance:
         CONN.commit()
         self.id = CURSOR.lastrowid
 
+
+    def update(self):
+        with CONN:
+            sql = '''
+                UPDATE performance
+                SET
+                test_date = ?,  
+                forty_yard = ?, 
+                vertical_jump = ?, 
+                agility_time = ?
+                flexibility_score =?, 
+                strength_score =?
+                notes =?
+                WHERE id = ?'''
+            CURSOR.execute(sql, (self.test_date, self.forty_yard, self.vertical_jump, self.agility_time, self.flexibility_score, self.strength_score, self.notes, self.id))
     def delete(self):
         sql = "DELETE FROM performances WHERE id = ?"  # Removed extra space
         CURSOR.execute(sql, (self.id,))
