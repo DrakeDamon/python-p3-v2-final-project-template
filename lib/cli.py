@@ -87,7 +87,69 @@ def performance_menu():
             break
         else:
             print("Invalid choice")
+            
+def update_performance_menu():
+    # First, get athlete's performances
+    athlete_id = input("Enter athlete ID: ")
+    performances = Performance.get_by_athlete_id(athlete_id)
+    
+    if not performances:
+        print("No performances found for this athlete.")
+        return
 
+    # Show available performances
+    print("\nAvailable Performances:")
+    for i, perf in enumerate(performances):
+        print(f"{i+1}. Date: {perf.test_date}, 40yd: {perf.forty_yard}")
+    
+    # Get which performance to update
+    choice = input("\nEnter number of performance to update: ")
+    try:
+        performance = performances[int(choice)-1]
+    except (ValueError, IndexError):
+        print("Invalid selection")
+        return
+
+    # Get updated values
+    print("\nEnter new values (press enter to keep current value):")
+    
+    new_date = input(f"Test date [{performance.test_date}]: ")
+    new_forty = input(f"40-yard time [{performance.forty_yard}]: ")
+    new_vertical = input(f"Vertical jump [{performance.vertical_jump}]: ")
+    new_agility = input(f"Agility time [{performance.agility_time}]: ")
+    new_flexibility = input(f"Flexibility score [{performance.flexibility_score}]: ")
+    new_strength = input(f"Strength score [{performance.strength_score}]: ")
+    new_notes = input(f"Notes [{performance.notes}]: ")
+
+    # Update only if new value provided
+    if new_date: performance.test_date = new_date
+    if new_forty: performance.forty_yard = float(new_forty)
+    if new_vertical: performance.vertical_jump = float(new_vertical)
+    if new_agility: performance.agility_time = float(new_agility)
+    if new_flexibility: performance.flexibility_score = float(new_flexibility)
+    if new_strength: performance.strength_score = float(new_strength)
+    if new_notes: performance.notes = new_notes
+
+    # Save updates
+    try:
+        performance.update()
+        print("\nPerformance updated successfully!")
+    except Exception as e:
+        print(f"\nError updating performance: {e}")
+
+# In main menu loop
+while True:
+    print("\nAthletic Performance Tracker")
+    print("1. Add Performance")
+    print("2. View Performances")
+    print("3. Update Performance")
+    print("4. Delete Performance")
+    print("5. Exit")
+    
+    choice = input("\nEnter your choice (1-5): ")
+    
+    if choice == "3":
+        update_performance_menu()
 
 def analysis_menu():
     while True:
