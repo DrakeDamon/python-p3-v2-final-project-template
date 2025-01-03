@@ -1,3 +1,4 @@
+# models/athlete.py
 from models.__init__ import CURSOR, CONN
 
 class Athlete:
@@ -7,48 +8,35 @@ class Athlete:
             CREATE TABLE IF NOT EXISTS athletes (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            height FLOAT,
-            weight FLOAT,
             position TEXT
-            )'''  # Removed extra comma
+            )'''
         CURSOR.execute(sql)
         CONN.commit()
 
-    def __init__(self, name, height, weight, position, id=None):
+    def __init__(self, name, position, id=None):
         self.id = id
-        self.name = name
-        self.height = height
-        self.weight = weight
+        self._name = name
         self.position = position
 
     @property
     def name(self):
-        return self._name  # Changed to _name to avoid infinite recursion
+        return self._name 
     
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and len(value.strip()) > 0:
-            self._name = value  # Changed to _name
-        else:
+        if not isinstance(value, str):
+            raise ValueError("Value must be a string")
+        if len(value.strip()) == 0:        
             raise ValueError("Name must be a non-empty string")
-    
-    @property
-    def height(self):
-        return self._height  # Changed to _height
-    
-    @height.setter
-    def height(self, value):
-        if isinstance(value, (int, float)) and value > 0:
-            self._height = value  # Changed to _height
-        else:
-            raise ValueError("Height must be a positive number")
+        self._name = value  
+
 
     def save(self):
         sql = '''
-            INSERT INTO athletes (name, height, weight, position)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO athletes (name, position)
+            VALUES (?, ?)
             '''
-        CURSOR.execute(sql, (self.name, self.height, self.weight, self.position))
+        CURSOR.execute(sql, (self.name, self.position))
         CONN.commit()
         self.id = CURSOR.lastrowid
 
@@ -58,7 +46,7 @@ class Athlete:
         CURSOR.execute(sql, (name,))
         row = CURSOR.fetchone()
         if row:
-            return cls(row[1],row[2],row[3],row[4],row[0])
+            return cls(row[1], row[2], row[0])
         return None
     
     def delete(self):
@@ -73,20 +61,18 @@ class Athlete:
         rows = CURSOR.fetchall()
         return [cls(
             name=row[1],
-            height=row[2],
-            weight=row[3],
-            position=row[4],
+            position=row[2],
             id=row[0]
         ) for row in rows]
     
-    def get_performances(self):  # Changed name to match Performance class
-        from models.performance import Performance  # Capitalized Performance
-        return Performance.get_by_athlete_id(self.id)  # Using the Performance class method
+    def get_performances(self): 
+        from models.performance import Performance  
+        return Performance.get_by_athlete_id(self.id)  
     
     def update(self):
         sql = '''
             UPDATE athletes
-            SET name = ?, height = ?, weight = ?, position = ?
+            SET name = ?, position = ?
             WHERE id = ?'''
-        CURSOR.execute(sql, (self.name, self.height, self.weight, self.position, self.id))
+        CURSOR.execute(sql, (self.name, self.position, self.id))
         CONN.commit()

@@ -1,83 +1,71 @@
+# models/performance.py
 from models.__init__ import CURSOR, CONN
 from datetime import datetime
 
 class Performance:
     @classmethod 
     def create_table(cls):
-      sql = '''
-          CREATE TABLE IF NOT EXISTS performances (
-              id INTEGER PRIMARY KEY,
-              athlete_id INTEGER,
-              test_date DATE,
-              forty_yard FLOAT,
-              vertical_jump FLOAT,
-              agility_time FLOAT,
-              flexibility_score FLOAT,
-              strength_score FLOAT,
-              notes TEXT,
-              FOREIGN KEY (athlete_id) REFERENCES athletes(id)
-          )
-          '''
-      CURSOR.execute(sql)
-      CONN.commit()
+        sql = '''
+            CREATE TABLE IF NOT EXISTS performances (
+                id INTEGER PRIMARY KEY,
+                athlete_id INTEGER,
+                test_date DATE,
+                speed_score FLOAT,
+                strength_score FLOAT,
+                notes TEXT,
+                FOREIGN KEY (athlete_id) REFERENCES athletes(id)
+            )
+            '''
+        CURSOR.execute(sql)
+        CONN.commit()
 
-    def __init__(self, athlete_id, test_date, forty_yard, vertical_jump, 
-                 agility_time, flexibility_score, strength_score, notes=None, id=None):  # Made notes optional
+    def __init__(self, athlete_id, test_date, speed_score, strength_score, notes=None, id=None):
         self.id = id
         self.athlete_id = athlete_id
         self.test_date = test_date
-        self.forty_yard = forty_yard
-        self.vertical_jump = vertical_jump
-        self.agility_time = agility_time
-        self.flexibility_score = flexibility_score
+        self.speed_score = speed_score
         self.strength_score = strength_score
         self.notes = notes
 
     @property
-    def forty_yard(self):
-        return self._forty_yard  # Changed to _forty_yard
+    def speed_score(self):
+        return self.speed_score
     
-    @forty_yard.setter
-    def forty_yard(self, value):
+    @speed_score.setter
+    def speed_score(self, value):
         if not isinstance(value, (int, float)):
-            raise ValueError("40-yard dash time must be a number")
-        if value < 3.0 or value > 6.0:
-            raise ValueError("40-yard dash time seems unrealistic")
-        self._forty_yard = value  # Changed to _forty_yard
+            raise ValueError("Speed score must be a number")
+        if value < 0 or value > 10:
+            raise ValueError("Speed score must be between 0 and 10")
+        self.speed_score = value
 
     def save(self):
         sql = '''
             INSERT INTO performances (
-                athlete_id, test_date, forty_yard, vertical_jump,
-                agility_time, flexibility_score, strength_score, notes
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                athlete_id, test_date, speed_score, strength_score, notes
+            ) VALUES (?, ?, ?, ?, ?)
             '''
         
         CURSOR.execute(sql, (
-            self.athlete_id, self.test_date, self.forty_yard, 
-            self.vertical_jump, self.agility_time, self.flexibility_score, 
+            self.athlete_id, self.test_date, self.speed_score, 
             self.strength_score, self.notes
         ))
         CONN.commit()
         self.id = CURSOR.lastrowid
 
-
     def update(self):
-        with CONN:
-            sql = '''
-                UPDATE performances
-                SET
-                test_date =?,  
-                forty_yard =?, 
-                vertical_jump =?, 
-                agility_time =?,
-                flexibility_score =?, 
-                strength_score =?,
-                notes =?
-                WHERE id = ?'''
-            CURSOR.execute(sql, (self.test_date, self.forty_yard, self.vertical_jump, self.agility_time, self.flexibility_score, self.strength_score, self.notes, self.id))
+        sql = '''
+            UPDATE performances
+            SET test_date = ?, speed_score = ?, strength_score = ?, notes = ?
+            WHERE id = ?'''
+        CURSOR.execute(sql, (
+            self.test_date, self.speed_score, self.strength_score, 
+            self.notes, self.id
+        ))
+        CONN.commit()
+
     def delete(self):
-        sql = "DELETE FROM performances WHERE id = ?"  # Removed extra space
+        sql = "DELETE FROM performances WHERE id = ?"
         CURSOR.execute(sql, (self.id,))
         CONN.commit()
 
@@ -90,21 +78,18 @@ class Performance:
             return [cls(
                 athlete_id=row[1],
                 test_date=row[2],
-                forty_yard=row[3],
-                vertical_jump=row[4],
-                agility_time=row[5],
-                flexibility_score=row[6],
-                strength_score=row[7],
-                notes=row[8],
+                speed_score=row[3],
+                strength_score=row[4],
+                notes=row[5],
                 id=row[0]
             ) for row in rows]
         return []
     
     def get_athlete(self):
         from models.athlete import Athlete
-        sql = "SELECT * FROM athletes WHERE id = ?"  # Changed to athletes table
-        CURSOR.execute(sql, (self.athlete_id,))  # Changed to athlete_id
+        sql = "SELECT * FROM athletes WHERE id = ?"
+        CURSOR.execute(sql, (self.athlete_id,))
         row = CURSOR.fetchone()
         if row:
-            return Athlete(*row)
+            return Athlete(row[1], row[2], row[0])
         return None
