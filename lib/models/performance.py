@@ -5,31 +5,36 @@ from datetime import datetime
 class Performance:
     @classmethod 
     def create_table(cls):
-        sql = '''
+        sql_create = '''
             CREATE TABLE IF NOT EXISTS performances (
                 id INTEGER PRIMARY KEY,
                 athlete_id INTEGER,
-                test_date DATE,
-                speed_score FLOAT,
-                strength_score FLOAT,
+                test_date DATETIME,
+                speed_score REAL,
+                strength_score REAL,
                 notes TEXT,
                 FOREIGN KEY (athlete_id) REFERENCES athletes(id)
             )
             '''
-        CURSOR.execute(sql)
+        CURSOR.execute(sql_create)
         CONN.commit()
 
     def __init__(self, athlete_id, test_date, speed_score, strength_score, notes=None, id=None):
         self.id = id
         self.athlete_id = athlete_id
         self.test_date = test_date
-        self.speed_score = speed_score
+
+        if not isinstance(speed_score, (int, float)):
+            raise ValueError("Speed score must be a number")
+        if speed_score < 0 or speed_score > 10:
+            raise ValueError("Speed score must be between 0 and 10")
+        self._speed_score = speed_score
         self.strength_score = strength_score
         self.notes = notes
 
     @property
     def speed_score(self):
-        return self.speed_score
+        return self._speed_score
     
     @speed_score.setter
     def speed_score(self, value):
@@ -37,8 +42,24 @@ class Performance:
             raise ValueError("Speed score must be a number")
         if value < 0 or value > 10:
             raise ValueError("Speed score must be between 0 and 10")
-        self.speed_score = value
+        self._speed_score = value
 
+
+    @classmethod
+    def create(cls, athlete_id, test_date, speed_score, strength_score, notes=None):
+        """Create and save a new performance record"""
+        # Convert string date to datetime if needed
+        if isinstance(test_date, str):
+            try:
+                # Parse date string into datetime object
+                test_date = datetime.strptime(test_date, '%Y-%m-%d')
+            except ValueError as e:
+                raise ValueError(f"Invalid date format: {e}")
+
+        # Create instance with converted datetime
+        performance = cls(athlete_id, test_date, speed_score, strength_score, notes)
+        performance.save()
+        return performance
     def save(self):
         sql = '''
             INSERT INTO performances (
@@ -65,9 +86,19 @@ class Performance:
         CONN.commit()
 
     def delete(self):
+        """Delete this performance from the database"""
+        if self.id is None:
+            raise ValueError("Cannot delete unsaved performance")
+            
         sql = "DELETE FROM performances WHERE id = ?"
         CURSOR.execute(sql, (self.id,))
+        rows_affected = CURSOR.rowcount  # Check if any rows were actually deleted
         CONN.commit()
+        
+        if rows_affected == 0:
+            raise ValueError(f"No performance found with id {self.id}")
+        
+        return True
 
     @classmethod
     def get_by_athlete_id(cls, athlete_id):

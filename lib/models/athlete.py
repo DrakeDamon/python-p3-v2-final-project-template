@@ -31,6 +31,17 @@ class Athlete:
         self._name = value  
 
 
+    @classmethod
+    def create(cls, name, position):
+        if not isinstance(name, str):
+            raise ValueError("Name must be a string")
+        if len(name.strip()) == 0:
+            raise ValueError("Name must be a non-empty string")
+        sql = ''' INSERT INTO athletes (name, position)
+        VALUES (?,?)'''
+        CURSOR.execute(sql, (name, position))
+        CONN.commit()
+        return cls(name, position, CURSOR.lastrowid)
     def save(self):
         sql = '''
             INSERT INTO athletes (name, position)
