@@ -8,7 +8,6 @@ from helpers import (
     record_performance,
     view_performance_history,
     delete_performance,
-    view_all_performances
 )
 
 def main_menu():
@@ -51,22 +50,19 @@ def athlete_menu():
 def performance_menu():
     while True:
         print("\n=== Performance Menu ===")
-        print("1. Record New Performance")
-        print("2. View Performance History")
+        print("1. View Performance History")
+        print("2. Record A New Performance")
         print("3. Delete Performance")
-        print("4. View All Performances")
-        print("5. Return to Main Menu")
+        print("4. Return to Main Menu")
 
-        choice = input("\nEnter choice (1-5): ")
+        choice = input("\nEnter choice (1-4): ")  # Corrected here
         if choice == "1":
-            record_performance()
+            view_performance_history()          
         elif choice == "2":
-            view_performance_history()
+            record_performance()
         elif choice == "3":
             delete_performance()
         elif choice == "4":
-            view_all_performances()
-        elif choice == "5":
             break
 
 if __name__ == "__main__":
