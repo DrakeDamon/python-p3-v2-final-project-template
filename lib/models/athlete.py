@@ -33,15 +33,12 @@ class Athlete:
 
     @classmethod
     def create(cls, name, position):
-        if not isinstance(name, str):
-            raise ValueError("Name must be a string")
-        if len(name.strip()) == 0:
-            raise ValueError("Name must be a non-empty string")
-        sql = ''' INSERT INTO athletes (name, position)
-        VALUES (?,?)'''
-        CURSOR.execute(sql, (name, position))
-        CONN.commit()
-        return cls(name, position, CURSOR.lastrowid)
+        """Create and save a new athlete"""
+        athlete = cls(name, position)
+        athlete.save()
+        return athlete
+    
+    
     def save(self):
         sql = '''
             INSERT INTO athletes (name, position)
@@ -61,6 +58,10 @@ class Athlete:
         return None
     
     def delete(self):
+
+        performances = self.get_performances()
+        for performance in performances:
+            performance.delete()
         sql = "DELETE FROM athletes WHERE id = ?"
         CURSOR.execute(sql, (self.id,))
         CONN.commit()

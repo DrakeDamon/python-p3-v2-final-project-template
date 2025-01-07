@@ -48,18 +48,11 @@ class Performance:
     @classmethod
     def create(cls, athlete_id, test_date, speed_score, strength_score, notes=None):
         """Create and save a new performance record"""
-        # Convert string date to datetime if needed
-        if isinstance(test_date, str):
-            try:
-                # Parse date string into datetime object
-                test_date = datetime.strptime(test_date, '%Y-%m-%d')
-            except ValueError as e:
-                raise ValueError(f"Invalid date format: {e}")
-
-        # Create instance with converted datetime
         performance = cls(athlete_id, test_date, speed_score, strength_score, notes)
         performance.save()
         return performance
+
+
     def save(self):
         sql = '''
             INSERT INTO performances (
