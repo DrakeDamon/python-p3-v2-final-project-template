@@ -4,6 +4,7 @@ from models.__init__ import CURSOR, CONN
 class Athlete:
     @classmethod
     def create_table(cls):
+
         sql = '''
             CREATE TABLE IF NOT EXISTS athletes (
             id INTEGER PRIMARY KEY,
@@ -16,7 +17,19 @@ class Athlete:
     def __init__(self, name, position, id=None):
         self.id = id
         self._name = name
-        self.position = position
+        self._position = position
+
+    @property
+    def position(self):
+        return self._position
+    
+    @position.setter
+    def position(self, value):
+        if not isinstance(value, str):
+            raise ValueError("Position must be a string")
+        if len(value.strip()) == 0:        
+            raise ValueError("Position must be a non-empty string")
+        self._position = value
 
     @property
     def name(self):
@@ -37,6 +50,14 @@ class Athlete:
         athlete = cls(name, position)
         athlete.save()
         return athlete
+    
+    def update(self):
+        sql = '''
+            UPDATE athletes
+            SET name = ?, position = ?
+            WHERE id = ?'''
+        CURSOR.execute(sql, (self.name, self.position, self.id))
+        CONN.commit()
     
     
     def save(self):

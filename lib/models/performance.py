@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Performance:
     @classmethod 
-    def create_table(cls):
+    def create_table(cls): 
         sql_create = '''
             CREATE TABLE IF NOT EXISTS performances (
                 id INTEGER PRIMARY KEY,

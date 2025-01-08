@@ -142,6 +142,32 @@ def delete_performance():
     except (ValueError, IndexError):
         print("\nInvalid athlete number.")
 
+def update_athlete():
+    """Update athlete information"""
+    athletes = view_athletes()
+    if not athletes:
+        return
+    
+    try:
+        athlete_num = input("\nSelect athlete number to update: ")
+        athlete = athletes[int(athlete_num) - 1]
+        
+        print(f"\nCurrent name: {athlete.name}")
+        new_name = input("Enter new name (or press Enter to keep current): ")
+        if new_name.strip():
+            athlete.name = new_name
+            
+        print(f"Current position: {athlete.position}")
+        new_position = input("Enter new position (or press Enter to keep current): ")
+        if new_position.strip():
+            athlete.position = new_position
+            
+        athlete.update()  # Calls the update method you already have
+        print(f"\nSuccessfully updated {athlete.name}!")
+        
+    except ValueError as e:
+        print(f"\nError: {e}")
+
 # def view_all_performances():
 #     """View all performances from all athletes"""
 #     print("\n=== All Performance Records ===")
